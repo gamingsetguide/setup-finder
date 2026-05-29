@@ -11,10 +11,29 @@
   <div class="container">
 
     <h1>🎮 Setup Finder Pro</h1>
-    <p class="subtitle">Type what you want and get the best gear</p>
+    <p class="subtitle">Build your full gaming setup</p>
 
-    <input id="query" placeholder="e.g. black creamy keyboard under $50" />
-    <button onclick="searchProducts()">Search</button>
+    <button onclick="toggleMode()" id="modeBtn">
+      Switch to FULL SETUP MODE
+    </button>
+
+    <!-- SINGLE MODE -->
+    <div id="singleMode">
+      <input id="query" placeholder="e.g. white creamy keyboard under 90" />
+      <button onclick="searchProducts()">Search</button>
+    </div>
+
+    <!-- SETUP MODE -->
+    <div id="setupMode" style="display:none">
+
+      <textarea id="setupText"
+        placeholder="Describe your setup:
+e.g. creamy white keyboard, LED mouse, headset with RGB, speaker"></textarea>
+
+      <input id="budget" type="number" placeholder="Budget ($) e.g. 200" />
+
+      <button onclick="buildSetup()">Build My Setup</button>
+    </div>
 
     <div id="results"></div>
 

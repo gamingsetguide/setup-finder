@@ -1,91 +1,101 @@
 const products = [
-  {
-    name: "RK61 Mechanical Keyboard",
-    price: 45,
-    color: "white",
-    sound: "creamy",
-    type: "keyboard",
-    link: "https://amazon.com"
-  },
-  {
-    name: "Redragon K617",
-    price: 25,
-    color: "white",
-    sound: "clicky",
-    type: "keyboard",
-    link: "https://amazon.com"
-  },
-  {
-    name: "Logitech G213",
-    price: 35,
-    color: "black",
-    sound: "silent",
-    type: "keyboard",
-    link: "https://amazon.com"
-  },
-  {
-    name: "HyperX Pulsefire Mouse",
-    price: 20,
-    color: "black",
-    sound: "silent",
-    type: "mouse",
-    link: "https://amazon.com"
-  }
+  { name:"AULA F75 Pro Keyboard", price:70, type:"keyboard", color:"white", sound:"creamy", link:"https://www.amazon.com/s?k=aula+f75+pro" },
+  { name:"AULA F75 Max Keyboard", price:90, type:"keyboard", color:"black", sound:"creamy", link:"https://www.amazon.com/s?k=aula+f75+max" },
+  { name:"RK61 Keyboard", price:45, type:"keyboard", color:"white", sound:"creamy", link:"https://www.amazon.com/s?k=rk61" },
+  { name:"Gaming Mouse RGB", price:30, type:"mouse", color:"black", sound:"silent", link:"https://www.amazon.com/s?k=gaming+mouse" },
+  { name:"RGB Headset", price:60, type:"headset", color:"black", sound:"bass", link:"https://www.amazon.com/s?k=gaming+headset" },
+  { name:"RGB Speaker", price:25, type:"speaker", color:"black", sound:"bass", link:"https://www.amazon.com/s?k=rgb+speaker" }
 ];
 
+let setupMode = false;
+
+function toggleMode() {
+  setupMode = !setupMode;
+
+  document.getElementById("singleMode").style.display = setupMode ? "none" : "block";
+  document.getElementById("setupMode").style.display = setupMode ? "block" : "none";
+
+  document.getElementById("modeBtn").innerText =
+    setupMode ? "Switch to SINGLE MODE" : "Switch to FULL SETUP MODE";
+
+  document.getElementById("results").innerHTML = "";
+}
+
+/* SINGLE MODE */
 function searchProducts() {
   const query = document.getElementById("query").value.toLowerCase();
+  let budget = extractBudget(query);
 
   let results = products.map(p => {
-
-    // BASE SCORE so everything always shows
     let score = 10;
 
-    // TYPE
-    if (query.includes("keyboard") && p.type === "keyboard") score += 40;
-    if (query.includes("mouse") && p.type === "mouse") score += 40;
+    if (query.includes(p.type)) score += 40;
+    if (query.includes(p.color)) score += 25;
+    if (query.includes(p.sound)) score += 25;
 
-    // COLOR
-    if (query.includes("white") && p.color === "white") score += 30;
-    if (query.includes("black") && p.color === "black") score += 30;
-
-    // SOUND
-    if (query.includes("creamy") && p.sound === "creamy") score += 35;
-    if (query.includes("clicky") && p.sound === "clicky") score += 35;
-    if (query.includes("silent") && p.sound === "silent") score += 35;
-
-    // PRICE
-    if (query.includes("cheap") && p.price <= 30) score += 25;
-    if (query.includes("under 50") && p.price <= 50) score += 25;
+    if (budget && p.price <= budget) score += 50;
 
     return { ...p, score };
   });
 
-  // sort best first
-  results = results.sort((a, b) => b.score - a.score);
+  results.sort((a,b) => b.score - a.score);
+  displayResults(results);
+}
+
+/* FULL SETUP MODE */
+function buildSetup() {
+  const text = document.getElementById("setupText").value.toLowerCase();
+  const budget = parseInt(document.getElementById("budget").value);
+
+  let types = ["keyboard","mouse","headset","speaker"];
+  let results = [];
+
+  types.forEach(type => {
+
+    let best = products
+      .filter(p => p.type === type)
+      .map(p => {
+        let score = 10;
+
+        if (text.includes("white") && p.color === "white") score += 20;
+        if (text.includes("black") && p.color === "black") score += 20;
+
+        if (text.includes("rgb") || text.includes("led")) score += 20;
+
+        if (budget && p.price <= budget / 4) score += 50;
+
+        return { ...p, score };
+      })
+      .sort((a,b) => b.score - a.score)[0];
+
+    if (best) results.push(best);
+  });
 
   displayResults(results);
 }
 
+function extractBudget(text) {
+  let match = text.match(/\d+/);
+  return match ? parseInt(match[0]) : null;
+}
+
 function displayResults(items) {
-  const resultsDiv = document.getElementById("results");
-  resultsDiv.innerHTML = "";
+  const div = document.getElementById("results");
+  div.innerHTML = "";
 
-  items.forEach((item, index) => {
+  items.forEach((item, i) => {
 
-    let badge = index === 0 ? "<div class='badge'>🔥 BEST MATCH</div>" : "";
+    let badge = i === 0 ? "<div class='badge'>🔥 BEST</div>" : "";
 
-    resultsDiv.innerHTML += `
+    div.innerHTML += `
       <div class="card">
         ${badge}
         <h3>${item.name}</h3>
-        <p>💰 Price: $${item.price}</p>
-        <p>🎨 Color: ${item.color}</p>
-        <p>🔊 Sound: ${item.sound}</p>
-        <p>⚡ Score: ${item.score}</p>
+        <p>💰 $${item.price}</p>
+        <p>Type: ${item.type}</p>
 
         <a class="buy" href="${item.link}" target="_blank">
-          Buy Now
+          Buy on Amazon
         </a>
       </div>
     `;
