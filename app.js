@@ -1,85 +1,75 @@
 const products = [
-  { name:"AULA F75 Pro Keyboard", price:70, type:"keyboard", color:"white", sound:"creamy", link:"https://www.amazon.com/s?k=aula+f75+pro" },
-  { name:"AULA F75 Max Keyboard", price:90, type:"keyboard", color:"black", sound:"creamy", link:"https://www.amazon.com/s?k=aula+f75+max" },
-  { name:"RK61 Keyboard", price:45, type:"keyboard", color:"white", sound:"creamy", link:"https://www.amazon.com/s?k=rk61" },
-  { name:"Gaming Mouse RGB", price:30, type:"mouse", color:"black", sound:"silent", link:"https://www.amazon.com/s?k=gaming+mouse" },
-  { name:"RGB Headset", price:60, type:"headset", color:"black", sound:"bass", link:"https://www.amazon.com/s?k=gaming+headset" },
-  { name:"RGB Speaker", price:25, type:"speaker", color:"black", sound:"bass", link:"https://www.amazon.com/s?k=rgb+speaker" }
+  { name:"AULA F75 Pro Keyboard", price:70, type:"keyboard", color:"black", tag:"rgb", link:"aula f75 pro keyboard" },
+  { name:"AULA F75 Max Keyboard", price:90, type:"keyboard", color:"black", tag:"rgb", link:"aula f75 max keyboard" },
+  { name:"RK61 Keyboard", price:45, type:"keyboard", color:"white", tag:"creamy", link:"rk61 keyboard" },
+
+  { name:"RGB Gaming Mouse", price:30, type:"mouse", color:"black", tag:"led", link:"gaming rgb mouse" },
+
+  { name:"RGB Headset", price:60, type:"headset", color:"black", tag:"rgb", link:"gaming headset rgb" },
+
+  { name:"RGB Speaker", price:25, type:"speaker", color:"black", tag:"bass", link:"rgb speaker" }
 ];
 
-let setupMode = false;
-
-function toggleMode() {
-  setupMode = !setupMode;
-
-  document.getElementById("singleMode").style.display = setupMode ? "none" : "block";
-  document.getElementById("setupMode").style.display = setupMode ? "block" : "none";
-
-  document.getElementById("modeBtn").innerText =
-    setupMode ? "Switch to SINGLE MODE" : "Switch to FULL SETUP MODE";
-
-  document.getElementById("results").innerHTML = "";
-}
-
-/* SINGLE MODE */
-function searchProducts() {
-  const query = document.getElementById("query").value.toLowerCase();
-  let budget = extractBudget(query);
-
-  let results = products.map(p => {
-    let score = 10;
-
-    if (query.includes(p.type)) score += 40;
-    if (query.includes(p.color)) score += 25;
-    if (query.includes(p.sound)) score += 25;
-
-    if (budget && p.price <= budget) score += 50;
-
-    return { ...p, score };
-  });
-
-  results.sort((a,b) => b.score - a.score);
-  displayResults(results);
-}
-
-/* FULL SETUP MODE */
+/* MAIN AI BUILDER */
 function buildSetup() {
-  const text = document.getElementById("setupText").value.toLowerCase();
+  const text = document.getElementById("query").value.toLowerCase();
   const budget = parseInt(document.getElementById("budget").value);
+  const sort = document.getElementById("sort").value;
 
-  let types = ["keyboard","mouse","headset","speaker"];
+  const itemsNeeded = detectItems(text);
+
   let results = [];
 
-  types.forEach(type => {
+  itemsNeeded.forEach(type => {
 
-    let best = products
-      .filter(p => p.type === type)
-      .map(p => {
-        let score = 10;
+    let options = products.filter(p => p.type === type).map(p => {
+      let score = 0;
 
-        if (text.includes("white") && p.color === "white") score += 20;
-        if (text.includes("black") && p.color === "black") score += 20;
+      if (text.includes(p.color)) score += 20;
+      if (text.includes("led") && p.tag.includes("led")) score += 30;
+      if (text.includes("rgb") && p.tag.includes("rgb")) score += 30;
+      if (text.includes("creamy") && p.tag.includes("creamy")) score += 30;
 
-        if (text.includes("rgb") || text.includes("led")) score += 20;
+      if (budget && p.price <= budget / itemsNeeded.length) score += 50;
 
-        if (budget && p.price <= budget / 4) score += 50;
+      return { ...p, score };
+    });
 
-        return { ...p, score };
-      })
-      .sort((a,b) => b.score - a.score)[0];
+    options.sort((a,b) => b.score - a.score);
 
-    if (best) results.push(best);
+    if (options[0]) results.push(options[0]);
   });
 
-  displayResults(results);
+  results = sortResults(results, sort);
+
+  display(results);
 }
 
-function extractBudget(text) {
-  let match = text.match(/\d+/);
-  return match ? parseInt(match[0]) : null;
+/* DETECT MULTIPLE ITEMS (THIS IS THE “AI PART”) */
+function detectItems(text) {
+  let items = [];
+
+  if (text.includes("keyboard")) items.push("keyboard");
+  if (text.includes("mouse")) items.push("mouse");
+  if (text.includes("headset") || text.includes("headphones")) items.push("headset");
+  if (text.includes("speaker")) items.push("speaker");
+
+  // default fallback
+  if (items.length === 0) items = ["keyboard"];
+
+  return items;
 }
 
-function displayResults(items) {
+/* SORT SYSTEM */
+function sortResults(items, sort) {
+  if (sort === "low") return items.sort((a,b) => a.price - b.price);
+  if (sort === "high") return items.sort((a,b) => b.price - a.price);
+  if (sort === "name") return items.sort((a,b) => a.name.localeCompare(b.name));
+  return items.sort((a,b) => b.score - a.score);
+}
+
+/* DISPLAY */
+function display(items) {
   const div = document.getElementById("results");
   div.innerHTML = "";
 
@@ -94,7 +84,7 @@ function displayResults(items) {
         <p>💰 $${item.price}</p>
         <p>Type: ${item.type}</p>
 
-        <a class="buy" href="${item.link}" target="_blank">
+        <a class="buy" href="https://www.amazon.com/s?k=${encodeURIComponent(item.link)}" target="_blank">
           Buy on Amazon
         </a>
       </div>

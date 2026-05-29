@@ -3,37 +3,29 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Setup Finder Pro</title>
+  <title>AI Setup Builder</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
   <div class="container">
 
-    <h1>🎮 Setup Finder Pro</h1>
-    <p class="subtitle">Build your full gaming setup</p>
+    <h1>🎮 AI Setup Builder</h1>
+    <p class="subtitle">Type anything. Get a full gaming setup.</p>
 
-    <button onclick="toggleMode()" id="modeBtn">
-      Switch to FULL SETUP MODE
-    </button>
+    <textarea id="query" placeholder="Example:
+I want a black keyboard, LED mouse, headset with RGB"></textarea>
 
-    <!-- SINGLE MODE -->
-    <div id="singleMode">
-      <input id="query" placeholder="e.g. white creamy keyboard under 90" />
-      <button onclick="searchProducts()">Search</button>
-    </div>
+    <input id="budget" type="number" placeholder="Budget ($) e.g. 200" />
 
-    <!-- SETUP MODE -->
-    <div id="setupMode" style="display:none">
+    <select id="sort">
+      <option value="relevance">Sort: Best Match</option>
+      <option value="low">Price: Low → High</option>
+      <option value="high">Price: High → Low</option>
+      <option value="name">Name</option>
+    </select>
 
-      <textarea id="setupText"
-        placeholder="Describe your setup:
-e.g. creamy white keyboard, LED mouse, headset with RGB, speaker"></textarea>
-
-      <input id="budget" type="number" placeholder="Budget ($) e.g. 200" />
-
-      <button onclick="buildSetup()">Build My Setup</button>
-    </div>
+    <button onclick="buildSetup()">Build My Setup</button>
 
     <div id="results"></div>
 
