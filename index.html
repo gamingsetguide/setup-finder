@@ -3,18 +3,27 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Setup Finder</title>
+  <title>Setup Finder Pro</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
   <div class="container">
-    <h1>🎮 Setup Finder</h1>
-    <p>Find the best gaming keyboard for your budget & style</p>
+
+    <h1>🎮 Setup Finder Pro</h1>
+    <p class="subtitle">Find the perfect gaming gear instantly</p>
+
+    <input id="search" placeholder="Search gear (keyboard, mouse, etc...)" />
 
     <div class="filters">
 
       <input id="budget" type="number" placeholder="Max Budget ($)" />
+
+      <select id="type">
+        <option value="">Any Type</option>
+        <option value="keyboard">Keyboard</option>
+        <option value="mouse">Mouse</option>
+      </select>
 
       <select id="color">
         <option value="">Any Color</option>
@@ -34,6 +43,7 @@
     </div>
 
     <div id="results"></div>
+
   </div>
 
   <script src="app.js"></script>
