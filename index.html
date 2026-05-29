@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Setup Finder</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <div class="container">
+    <h1>🎮 Setup Finder</h1>
+    <p>Find the best gaming keyboard for your budget & style</p>
+
+    <div class="filters">
+
+      <input id="budget" type="number" placeholder="Max Budget ($)" />
+
+      <select id="color">
+        <option value="">Any Color</option>
+        <option value="white">White</option>
+        <option value="black">Black</option>
+      </select>
+
+      <select id="sound">
+        <option value="">Any Sound</option>
+        <option value="creamy">Creamy</option>
+        <option value="clicky">Clicky</option>
+        <option value="silent">Silent</option>
+      </select>
+
+      <button onclick="searchProducts()">Find Best Match</button>
+
+    </div>
+
+    <div id="results"></div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
