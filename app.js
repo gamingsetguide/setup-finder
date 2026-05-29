@@ -1,66 +1,95 @@
 const products = [
-  { name:"AULA F75 Pro Keyboard", price:70, type:"keyboard", color:"black", tag:"rgb", link:"aula f75 pro keyboard" },
-  { name:"AULA F75 Max Keyboard", price:90, type:"keyboard", color:"black", tag:"rgb", link:"aula f75 max keyboard" },
-  { name:"RK61 Keyboard", price:45, type:"keyboard", color:"white", tag:"creamy", link:"rk61 keyboard" },
+  { name:"AULA F75 Pro", price:70, type:"keyboard", color:"black", tag:"rgb" },
+  { name:"AULA F75 Max", price:90, type:"keyboard", color:"black", tag:"rgb" },
+  { name:"RK61 Keyboard", price:45, type:"keyboard", color:"white", tag:"creamy" },
 
-  { name:"RGB Gaming Mouse", price:30, type:"mouse", color:"black", tag:"led", link:"gaming rgb mouse" },
-
-  { name:"RGB Headset", price:60, type:"headset", color:"black", tag:"rgb", link:"gaming headset rgb" },
-
-  { name:"RGB Speaker", price:25, type:"speaker", color:"black", tag:"bass", link:"rgb speaker" }
+  { name:"RGB Gaming Mouse", price:30, type:"mouse", color:"black", tag:"led" },
+  { name:"RGB Headset", price:60, type:"headset", color:"black", tag:"rgb" },
+  { name:"RGB Speaker", price:25, type:"speaker", color:"black", tag:"bass" }
 ];
 
-/* MAIN AI BUILDER */
-function buildSetup() {
-  const text = document.getElementById("query").value.toLowerCase();
-  const budget = parseInt(document.getElementById("budget").value);
-  const sort = document.getElementById("sort").value;
+let mode = "single";
 
-  const itemsNeeded = detectItems(text);
+/* FIXED MODE TOGGLE */
+function toggleMode() {
+  mode = mode === "single" ? "setup" : "single";
 
-  let results = [];
+  document.getElementById("singleMode").style.display =
+    mode === "single" ? "block" : "none";
 
-  itemsNeeded.forEach(type => {
+  document.getElementById("setupMode").style.display =
+    mode === "setup" ? "block" : "none";
 
-    let options = products.filter(p => p.type === type).map(p => {
-      let score = 0;
+  document.getElementById("modeBtn").innerText =
+    mode === "single" ? "Switch to FULL SETUP MODE" : "Switch to SINGLE MODE";
 
-      if (text.includes(p.color)) score += 20;
-      if (text.includes("led") && p.tag.includes("led")) score += 30;
-      if (text.includes("rgb") && p.tag.includes("rgb")) score += 30;
-      if (text.includes("creamy") && p.tag.includes("creamy")) score += 30;
+  document.getElementById("results").innerHTML = "";
+}
 
-      if (budget && p.price <= budget / itemsNeeded.length) score += 50;
+/* SINGLE MODE */
+function searchProducts() {
+  const query = document.getElementById("query").value.toLowerCase().trim();
 
-      return { ...p, score };
-    });
+  if (query.length < 2) {
+    document.getElementById("results").innerHTML =
+      "<p>Type something real 😭</p>";
+    return;
+  }
 
-    options.sort((a,b) => b.score - a.score);
+  let results = products.map(p => {
+    let score = 0;
 
-    if (options[0]) results.push(options[0]);
+    if (query.includes(p.type)) score += 40;
+    if (query.includes(p.color)) score += 25;
+    if (query.includes("led") && p.tag.includes("led")) score += 25;
+    if (query.includes("rgb") && p.tag.includes("rgb")) score += 25;
+
+    return { ...p, score };
   });
 
-  results = sortResults(results, sort);
+  results = results.filter(r => r.score > 0)
+                   .sort((a,b) => b.score - a.score);
 
   display(results);
 }
 
-/* DETECT MULTIPLE ITEMS (THIS IS THE “AI PART”) */
-function detectItems(text) {
-  let items = [];
+/* FULL SETUP MODE (FIXED AI BUILDER) */
+function buildSetup() {
+  const text = document.getElementById("setupText").value.toLowerCase();
+  const budget = parseInt(document.getElementById("budget").value);
+  const sort = document.getElementById("sort").value;
 
-  if (text.includes("keyboard")) items.push("keyboard");
-  if (text.includes("mouse")) items.push("mouse");
-  if (text.includes("headset") || text.includes("headphones")) items.push("headset");
-  if (text.includes("speaker")) items.push("speaker");
+  const types = ["keyboard","mouse","headset","speaker"];
+  let results = [];
 
-  // default fallback
-  if (items.length === 0) items = ["keyboard"];
+  types.forEach(type => {
 
-  return items;
+    let best = products
+      .filter(p => p.type === type)
+      .map(p => {
+        let score = 0;
+
+        if (text.includes("black") && p.color === "black") score += 20;
+        if (text.includes("white") && p.color === "white") score += 20;
+
+        if (text.includes("led") && p.tag.includes("led")) score += 30;
+        if (text.includes("rgb") && p.tag.includes("rgb")) score += 30;
+        if (text.includes("creamy") && p.tag.includes("creamy")) score += 30;
+
+        if (budget && p.price <= budget / 4) score += 50;
+
+        return { ...p, score };
+      })
+      .sort((a,b) => b.score - a.score)[0];
+
+    if (best) results.push(best);
+  });
+
+  results = sortResults(results, sort);
+  display(results);
 }
 
-/* SORT SYSTEM */
+/* SORT */
 function sortResults(items, sort) {
   if (sort === "low") return items.sort((a,b) => a.price - b.price);
   if (sort === "high") return items.sort((a,b) => b.price - a.price);
@@ -75,7 +104,7 @@ function display(items) {
 
   items.forEach((item, i) => {
 
-    let badge = i === 0 ? "<div class='badge'>🔥 BEST</div>" : "";
+    const badge = i === 0 ? "<div class='badge'>🔥 BEST</div>" : "";
 
     div.innerHTML += `
       <div class="card">
@@ -84,7 +113,8 @@ function display(items) {
         <p>💰 $${item.price}</p>
         <p>Type: ${item.type}</p>
 
-        <a class="buy" href="https://www.amazon.com/s?k=${encodeURIComponent(item.link)}" target="_blank">
+        <a class="buy" target="_blank"
+        href="https://www.amazon.com/s?k=${encodeURIComponent(item.name)}">
           Buy on Amazon
         </a>
       </div>
