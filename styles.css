@@ -11,22 +11,25 @@ body {
 }
 
 h1 {
-  font-size: 42px;
+  font-size: 40px;
 }
 
 .subtitle {
   color: #aaa;
+  margin-bottom: 20px;
 }
 
-input, select {
-  padding: 10px;
-  border-radius: 8px;
+input {
+  width: 80%;
+  max-width: 400px;
+  padding: 12px;
+  border-radius: 10px;
   border: none;
-  margin: 5px;
+  margin-bottom: 10px;
 }
 
 button {
-  padding: 12px;
+  padding: 12px 18px;
   border: none;
   border-radius: 10px;
   background: #4f46e5;

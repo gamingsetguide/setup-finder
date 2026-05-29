@@ -11,36 +11,10 @@
   <div class="container">
 
     <h1>🎮 Setup Finder Pro</h1>
-    <p class="subtitle">Find the perfect gaming gear instantly</p>
+    <p class="subtitle">Type what you want and get the best gear</p>
 
-    <input id="search" placeholder="Search gear (keyboard, mouse, etc...)" />
-
-    <div class="filters">
-
-      <input id="budget" type="number" placeholder="Max Budget ($)" />
-
-      <select id="type">
-        <option value="">Any Type</option>
-        <option value="keyboard">Keyboard</option>
-        <option value="mouse">Mouse</option>
-      </select>
-
-      <select id="color">
-        <option value="">Any Color</option>
-        <option value="white">White</option>
-        <option value="black">Black</option>
-      </select>
-
-      <select id="sound">
-        <option value="">Any Sound</option>
-        <option value="creamy">Creamy</option>
-        <option value="clicky">Clicky</option>
-        <option value="silent">Silent</option>
-      </select>
-
-      <button onclick="searchProducts()">Find Best Match</button>
-
-    </div>
+    <input id="query" placeholder="e.g. black creamy keyboard under $50" />
+    <button onclick="searchProducts()">Search</button>
 
     <div id="results"></div>
 

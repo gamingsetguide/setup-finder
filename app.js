@@ -34,21 +34,30 @@ const products = [
 ];
 
 function searchProducts() {
-  const search = document.getElementById("search").value.toLowerCase();
-  const budget = document.getElementById("budget").value;
-  const type = document.getElementById("type").value;
-  const color = document.getElementById("color").value;
-  const sound = document.getElementById("sound").value;
+  const query = document.getElementById("query").value.toLowerCase();
 
-  let results = products.filter(p => {
-    return (
-      (budget === "" || p.price <= budget) &&
-      (type === "" || p.type === type) &&
-      (color === "" || p.color === color) &&
-      (sound === "" || p.sound === sound) &&
-      (search === "" || p.name.toLowerCase().includes(search))
-    );
+  let results = products.map(p => {
+    let score = 0;
+
+    if (query.includes("keyboard") && p.type === "keyboard") score += 20;
+    if (query.includes("mouse") && p.type === "mouse") score += 20;
+
+    if (query.includes("white") && p.color === "white") score += 25;
+    if (query.includes("black") && p.color === "black") score += 25;
+
+    if (query.includes("creamy") && p.sound === "creamy") score += 30;
+    if (query.includes("clicky") && p.sound === "clicky") score += 30;
+    if (query.includes("silent") && p.sound === "silent") score += 30;
+
+    if (query.includes("cheap") && p.price <= 30) score += 20;
+    if (query.includes("under $50") && p.price <= 50) score += 25;
+
+    return { ...p, score };
   });
+
+  results = results
+    .filter(p => p.score > 0)
+    .sort((a, b) => b.score - a.score);
 
   displayResults(results);
 }
@@ -58,16 +67,13 @@ function displayResults(items) {
   resultsDiv.innerHTML = "";
 
   if (items.length === 0) {
-    resultsDiv.innerHTML = "<p>No matches found 😢</p>";
+    resultsDiv.innerHTML = "<p>No matches found 😢 try different words</p>";
     return;
   }
 
-  items.forEach(item => {
+  items.forEach((item, index) => {
 
-    let score = 100 - item.price;
-
-    let badge = "";
-    if (score > 70) badge = "<div class='badge'>🔥 BEST</div>";
+    let badge = index === 0 ? "<div class='badge'>🔥 BEST MATCH</div>" : "";
 
     resultsDiv.innerHTML += `
       <div class="card">
@@ -76,7 +82,7 @@ function displayResults(items) {
         <p>💰 Price: $${item.price}</p>
         <p>🎨 Color: ${item.color}</p>
         <p>🔊 Sound: ${item.sound}</p>
-        <p>⚡ Match Score: ${score}/100</p>
+        <p>⚡ Score: ${item.score}</p>
 
         <a class="buy" href="${item.link}" target="_blank">
           Buy Now
