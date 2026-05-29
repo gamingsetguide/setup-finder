@@ -1,61 +1,43 @@
 const products = [
   { name:"AULA F75 Pro", price:70, type:"keyboard", color:"black", tag:"rgb" },
-  { name:"AULA F75 Max", price:90, type:"keyboard", color:"black", tag:"rgb" },
-  { name:"RK61 Keyboard", price:45, type:"keyboard", color:"white", tag:"creamy" },
+  { name:"RK61 Creamy", price:45, type:"keyboard", color:"white", tag:"creamy" },
 
-  { name:"RGB Gaming Mouse", price:30, type:"mouse", color:"black", tag:"led" },
+  { name:"RGB Gaming Mouse", price:30, type:"mouse", color:"black", tag:"rgb" },
+
   { name:"RGB Headset", price:60, type:"headset", color:"black", tag:"rgb" },
+
   { name:"RGB Speaker", price:25, type:"speaker", color:"black", tag:"bass" }
 ];
 
-let mode = "single";
+let modePreset = null;
 
-/* FIXED MODE TOGGLE */
-function toggleMode() {
-  mode = mode === "single" ? "setup" : "single";
+/* PRESET BUTTONS */
+function setMode(mode) {
+  modePreset = mode;
 
-  document.getElementById("singleMode").style.display =
-    mode === "single" ? "block" : "none";
+  const text = document.getElementById("customText");
 
-  document.getElementById("setupMode").style.display =
-    mode === "setup" ? "block" : "none";
-
-  document.getElementById("modeBtn").innerText =
-    mode === "single" ? "Switch to FULL SETUP MODE" : "Switch to SINGLE MODE";
-
-  document.getElementById("results").innerHTML = "";
-}
-
-/* SINGLE MODE */
-function searchProducts() {
-  const query = document.getElementById("query").value.toLowerCase().trim();
-
-  if (query.length < 2) {
-    document.getElementById("results").innerHTML =
-      "<p>Type something real 😭</p>";
-    return;
+  if (mode === "fps") {
+    text.value = "low latency keyboard, fast mouse, competitive headset";
   }
 
-  let results = products.map(p => {
-    let score = 0;
+  if (mode === "rgb") {
+    text.value = "rgb keyboard, rgb mouse, rgb headset, rgb speaker";
+  }
 
-    if (query.includes(p.type)) score += 40;
-    if (query.includes(p.color)) score += 25;
-    if (query.includes("led") && p.tag.includes("led")) score += 25;
-    if (query.includes("rgb") && p.tag.includes("rgb")) score += 25;
+  if (mode === "budget") {
+    text.value = "cheap keyboard, cheap mouse, budget headset";
+  }
 
-    return { ...p, score };
-  });
-
-  results = results.filter(r => r.score > 0)
-                   .sort((a,b) => b.score - a.score);
-
-  display(results);
+  if (mode === "creamy") {
+    text.value = "white creamy keyboard, soft mouse, chill setup";
+  }
 }
 
-/* FULL SETUP MODE (FIXED AI BUILDER) */
+/* MAIN BUILDER */
 function buildSetup() {
-  const text = document.getElementById("setupText").value.toLowerCase();
+
+  const text = document.getElementById("customText").value.toLowerCase();
   const budget = parseInt(document.getElementById("budget").value);
   const sort = document.getElementById("sort").value;
 
@@ -67,14 +49,15 @@ function buildSetup() {
     let best = products
       .filter(p => p.type === type)
       .map(p => {
+
         let score = 0;
 
+        if (text.includes("rgb") && p.tag.includes("rgb")) score += 30;
+        if (text.includes("creamy") && p.tag.includes("creamy")) score += 30;
         if (text.includes("black") && p.color === "black") score += 20;
         if (text.includes("white") && p.color === "white") score += 20;
 
-        if (text.includes("led") && p.tag.includes("led")) score += 30;
-        if (text.includes("rgb") && p.tag.includes("rgb")) score += 30;
-        if (text.includes("creamy") && p.tag.includes("creamy")) score += 30;
+        if (text.includes("fast") || text.includes("fps")) score += 20;
 
         if (budget && p.price <= budget / 4) score += 50;
 
@@ -104,11 +87,9 @@ function display(items) {
 
   items.forEach((item, i) => {
 
-    const badge = i === 0 ? "<div class='badge'>🔥 BEST</div>" : "";
-
     div.innerHTML += `
       <div class="card">
-        ${badge}
+        ${i === 0 ? "<div class='badge'>🔥 BEST</div>" : ""}
         <h3>${item.name}</h3>
         <p>💰 $${item.price}</p>
         <p>Type: ${item.type}</p>

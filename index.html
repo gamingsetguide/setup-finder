@@ -3,47 +3,45 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>AI Setup Builder</title>
+  <title>Pro Gaming Setup Builder</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-  <div class="container">
+<div class="container">
 
-    <h1>🎮 AI Setup Builder</h1>
-    <p class="subtitle">Type anything → get full gaming setup</p>
+  <h1>🎮 Pro Gaming Setup Builder</h1>
+  <p class="subtitle">1-click gaming setup generator</p>
 
-    <button id="modeBtn" onclick="toggleMode()">Switch to FULL SETUP MODE</button>
-
-    <!-- SINGLE MODE -->
-    <div id="singleMode">
-      <input id="query" placeholder="e.g. black keyboard under 90" />
-      <button onclick="searchProducts()">Search</button>
-    </div>
-
-    <!-- FULL SETUP MODE -->
-    <div id="setupMode" style="display:none">
-
-      <textarea id="setupText" placeholder="Example:
-I want a black keyboard, LED mouse, headset with RGB"></textarea>
-
-      <input id="budget" type="number" placeholder="Budget ($)" />
-
-      <select id="sort">
-        <option value="relevance">Best Match</option>
-        <option value="low">Price: Low → High</option>
-        <option value="high">Price: High → Low</option>
-        <option value="name">Name</option>
-      </select>
-
-      <button onclick="buildSetup()">Build Setup</button>
-
-    </div>
-
-    <div id="results"></div>
-
+  <!-- MODE BUTTONS -->
+  <div class="buttons">
+    <button onclick="setMode('fps')">🔥 FPS Pro Setup</button>
+    <button onclick="setMode('rgb')">🌈 RGB Setup</button>
+    <button onclick="setMode('budget')">💰 Budget Setup</button>
+    <button onclick="setMode('creamy')">🧊 Creamy White Setup</button>
   </div>
 
-  <script src="app.js"></script>
+  <hr>
+
+  <!-- CUSTOM INPUT -->
+  <textarea id="customText" placeholder="Or type your own setup:
+e.g. black keyboard, LED mouse, headset"></textarea>
+
+  <input id="budget" type="number" placeholder="Budget ($) e.g. 200" />
+
+  <select id="sort">
+    <option value="relevance">Best Match</option>
+    <option value="low">Price: Low → High</option>
+    <option value="high">Price: High → Low</option>
+    <option value="name">Name</option>
+  </select>
+
+  <button onclick="buildSetup()">Build Setup</button>
+
+  <div id="results"></div>
+
+</div>
+
+<script src="app.js"></script>
 </body>
 </html>
