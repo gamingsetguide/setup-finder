@@ -10,27 +10,17 @@ body {
   padding: 30px;
 }
 
-h1 { font-size: 40px; }
-
-.subtitle { color: #aaa; }
-
-.buttons button {
-  margin: 5px;
-  padding: 10px 14px;
-  border-radius: 10px;
-  border: none;
-  background: #1f2937;
-  color: white;
-  cursor: pointer;
+h1 {
+  font-size: 38px;
 }
 
-.buttons button:hover {
-  background: #374151;
+.subtitle {
+  color: #aaa;
 }
 
-textarea, input, select {
+input, textarea, select {
   width: 80%;
-  max-width: 500px;
+  max-width: 520px;
   padding: 12px;
   margin: 8px;
   border-radius: 10px;
@@ -59,7 +49,7 @@ button:hover {
   padding: 15px;
   margin: 15px auto;
   border-radius: 12px;
-  max-width: 500px;
+  max-width: 520px;
   text-align: left;
   position: relative;
 }

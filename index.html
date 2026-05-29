@@ -11,32 +11,45 @@
 <div class="container">
 
   <h1>🎮 Pro Gaming Setup Builder</h1>
-  <p class="subtitle">1-click gaming setup generator</p>
+  <p class="subtitle">Build full gaming setups instantly</p>
 
-  <!-- MODE BUTTONS -->
-  <div class="buttons">
-    <button onclick="setMode('fps')">🔥 FPS Pro Setup</button>
-    <button onclick="setMode('rgb')">🌈 RGB Setup</button>
-    <button onclick="setMode('budget')">💰 Budget Setup</button>
-    <button onclick="setMode('creamy')">🧊 Creamy White Setup</button>
+  <!-- MODE SWITCH -->
+  <button onclick="toggleMode()" id="modeBtn">Switch to FULL SETUP MODE</button>
+
+  <!-- SINGLE MODE -->
+  <div id="singleMode">
+
+    <input id="query" placeholder="e.g. black keyboard rgb mouse" />
+    <input id="singleBudget" type="number" placeholder="Budget ($)" />
+
+    <select id="singleSort">
+      <option value="best">Best Match</option>
+      <option value="low">Price Low → High</option>
+      <option value="high">Price High → Low</option>
+      <option value="name">Name</option>
+    </select>
+
+    <button onclick="searchProducts()">Search</button>
   </div>
 
-  <hr>
+  <!-- FULL SETUP MODE -->
+  <div id="setupMode" style="display:none">
 
-  <!-- CUSTOM INPUT -->
-  <textarea id="customText" placeholder="Or type your own setup:
-e.g. black keyboard, LED mouse, headset"></textarea>
+    <textarea id="setupText" placeholder="Describe your setup:
+e.g. RGB gaming setup, creamy white setup, FPS competitive setup"></textarea>
 
-  <input id="budget" type="number" placeholder="Budget ($) e.g. 200" />
+    <input id="budget" type="number" placeholder="Total Budget ($)" />
 
-  <select id="sort">
-    <option value="relevance">Best Match</option>
-    <option value="low">Price: Low → High</option>
-    <option value="high">Price: High → Low</option>
-    <option value="name">Name</option>
-  </select>
+    <select id="setupSort">
+      <option value="best">Best Match</option>
+      <option value="low">Price Low → High</option>
+      <option value="high">Price High → Low</option>
+      <option value="name">Name</option>
+    </select>
 
-  <button onclick="buildSetup()">Build Setup</button>
+    <button onclick="buildSetup()">Build Full Setup</button>
+
+  </div>
 
   <div id="results"></div>
 
