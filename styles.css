@@ -18,13 +18,14 @@ body {
 input, select {
   width: 80%;
   padding: 10px;
-  margin: 8px;
+  margin: 6px;
   border-radius: 10px;
   border: none;
 }
 
 button {
-  padding: 10px 16px;
+  padding: 10px 14px;
+  margin: 5px;
   background: #4f46e5;
   border: none;
   color: white;

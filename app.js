@@ -7,62 +7,89 @@ const products = [
   { name:"Razer Viper Mini", type:"mouse", price:45, tag:"fps" },
 
   { name:"HyperX Cloud II", type:"headset", price:70, tag:"fps" },
-  { name:"HyperX Cloud Core", type:"headset", price:50, tag:"fps" },
-
-  { name:"Creative Pebble", type:"speaker", price:35, tag:"clean" },
-
-  { name:"AOC 24G2", type:"monitor", price:130, tag:"fps" },
-  { name:"RTX 3060", type:"gpu", price:250, tag:"gaming" },
-  { name:"Ryzen 5 5600", type:"cpu", price:120, tag:"gaming" }
+  { name:"HyperX Cloud Core", type:"headset", price:50, tag:"fps" }
 ];
 
-function search() {
+let mode = "single";
 
-  const category = document.getElementById("category").value;
-  const budget = parseInt(document.getElementById("budget").value) || 9999;
+function setMode(m) {
+  mode = m;
 
-  let results = products.filter(p =>
-    (category === "all" || p.type === category) &&
-    p.price <= budget
-  );
+  document.getElementById("singleMode").style.display =
+    m === "single" ? "block" : "none";
 
-  render(results, budget, budget);
+  document.getElementById("setupMode").style.display =
+    m === "setup" ? "block" : "none";
 }
+
+/* ---------------- SINGLE MODE ---------------- */
+
+function singleSearch() {
+
+  const type = document.getElementById("singleType").value;
+  const desc = document.getElementById("singleDesc").value.toLowerCase();
+  const budget = parseInt(document.getElementById("singleBudget").value) || 999;
+
+  let best = products
+    .filter(p => p.type === type)
+    .map(p => {
+
+      let score = 0;
+
+      if (desc.includes("rgb") && p.tag === "rgb") score += 50;
+      if (desc.includes("creamy") && p.tag === "creamy") score += 50;
+      if (desc.includes("fps") && p.tag === "fps") score += 50;
+
+      if (p.price <= budget) score += 30;
+
+      return { ...p, score };
+    })
+    .sort((a,b)=>b.score-a.score)[0];
+
+  render([best], budget, best.price);
+}
+
+/* ---------------- SETUP MODE ---------------- */
 
 function buildSetup() {
 
-  const text = document.getElementById("input").value.toLowerCase();
-  const budget = 300;
+  const kb = document.getElementById("setupKeyboard").value.toLowerCase();
+  const ms = document.getElementById("setupMouse").value.toLowerCase();
+  const hs = document.getElementById("setupHeadset").value.toLowerCase();
+  const budget = parseInt(document.getElementById("setupBudget").value) || 300;
 
-  const types = ["keyboard","mouse","headset"];
+  let items = [
+    pick("keyboard", kb),
+    pick("mouse", ms),
+    pick("headset", hs)
+  ];
 
-  let results = [];
-  let total = 0;
+  let total = items.reduce((a,b)=>a + b.price, 0);
 
-  for (let type of types) {
-
-    let options = products
-      .filter(p => p.type === type)
-      .map(p => {
-
-        let score = 0;
-
-        if (text.includes("rgb") && p.tag === "rgb") score += 40;
-        if (text.includes("creamy") && p.tag === "creamy") score += 40;
-        if (text.includes("fps") && p.tag === "fps") score += 40;
-
-        return { ...p, score };
-      })
-      .sort((a,b) => b.score - a.score);
-
-    let chosen = options[0];
-
-    results.push(chosen);
-    total += chosen.price;
-  }
-
-  render(results, budget, total);
+  render(items, budget, total);
 }
+
+/* smart picker */
+function pick(type, desc) {
+
+  let best = products
+    .filter(p => p.type === type)
+    .map(p => {
+
+      let score = 0;
+
+      if (desc.includes("rgb") && p.tag === "rgb") score += 50;
+      if (desc.includes("creamy") && p.tag === "creamy") score += 50;
+      if (desc.includes("fps") && p.tag === "fps") score += 50;
+
+      return { ...p, score };
+    })
+    .sort((a,b)=>b.score-a.score)[0];
+
+  return best;
+}
+
+/* ---------------- RENDER ---------------- */
 
 function render(items, budget, total) {
 
@@ -73,7 +100,7 @@ function render(items, budget, total) {
   results.innerHTML = "";
 
   summary.innerHTML = `
-    <h2>🔥 Setup</h2>
+    <h2>🔥 Setup Result</h2>
     <p>💰 Total: $${total}</p>
   `;
 
@@ -87,6 +114,7 @@ function render(items, budget, total) {
   `;
 
   items.forEach(item => {
+
     results.innerHTML += `
       <div class="card">
         <h3>${item.name}</h3>

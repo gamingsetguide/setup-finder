@@ -1,40 +1,50 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Setup Finder Pro</title>
+  <title>Setup Builder Pro MAX</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-<h1>🎮 Setup Finder Pro</h1>
-<p>Build gaming setups instantly</p>
+<h1>🎮 Setup Builder Pro MAX</h1>
 
 <div class="box">
 
-  <h2>🔍 Quick Search</h2>
+  <h2>Mode</h2>
 
-  <select id="category">
-    <option value="all">All</option>
-    <option value="keyboard">Keyboard</option>
-    <option value="mouse">Mouse</option>
-    <option value="headset">Headset</option>
-    <option value="speaker">Speaker</option>
-    <option value="cpu">CPU</option>
-    <option value="gpu">GPU</option>
-    <option value="monitor">Monitor</option>
-  </select>
-
-  <input id="budget" type="number" placeholder="Budget ($)" />
-
-  <button onclick="search()">Search</button>
+  <button onclick="setMode('single')">Single Mode</button>
+  <button onclick="setMode('setup')">Setup Mode</button>
 
 </div>
 
-<div class="box">
+<!-- SINGLE MODE -->
+<div class="box" id="singleMode">
 
-  <h2>🧠 Full Setup Mode</h2>
+  <h2>🔹 Single Mode</h2>
 
-  <input id="input" placeholder="e.g. RGB creamy FPS setup" />
+  <select id="singleType">
+    <option value="keyboard">Keyboard</option>
+    <option value="mouse">Mouse</option>
+    <option value="headset">Headset</option>
+  </select>
+
+  <input id="singleDesc" placeholder="e.g. white, RGB, creamy, clicky" />
+  <input id="singleBudget" type="number" placeholder="Budget ($)" />
+
+  <button onclick="singleSearch()">Find Item</button>
+
+</div>
+
+<!-- SETUP MODE -->
+<div class="box" id="setupMode" style="display:none;">
+
+  <h2>🟢 Setup Mode</h2>
+
+  <input id="setupKeyboard" placeholder="Keyboard (e.g. white RGB creamy)" />
+  <input id="setupMouse" placeholder="Mouse (e.g. light FPS RGB)" />
+  <input id="setupHeadset" placeholder="Headset (e.g. bass RGB white)" />
+
+  <input id="setupBudget" type="number" placeholder="Total Budget ($)" />
 
   <button onclick="buildSetup()">Build Setup</button>
 
