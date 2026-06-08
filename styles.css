@@ -6,28 +6,25 @@ body {
   margin: 0;
 }
 
-h1 {
-  margin-top: 20px;
-}
-
 .box {
+  background: #151a2b;
   margin: 20px auto;
   padding: 20px;
-  max-width: 600px;
-  background: #151a2b;
+  width: 90%;
+  max-width: 700px;
   border-radius: 12px;
 }
 
-input {
+input, select {
   width: 80%;
-  padding: 12px;
+  padding: 10px;
   margin: 8px;
   border-radius: 10px;
   border: none;
 }
 
 button {
-  padding: 12px 18px;
+  padding: 10px 16px;
   background: #4f46e5;
   border: none;
   color: white;
@@ -45,10 +42,16 @@ button {
   text-align: left;
 }
 
-.badge {
-  float: right;
-  background: gold;
-  color: black;
-  padding: 4px 8px;
-  border-radius: 8px;
+.bar {
+  width: 80%;
+  height: 18px;
+  background: #1f2937;
+  margin: 10px auto;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.fill {
+  height: 100%;
+  background: #22c55e;
 }

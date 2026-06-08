@@ -1,33 +1,38 @@
 const products = [
-
-  // KEYBOARDS
   { name:"AULA F75 RGB", type:"keyboard", price:70, tag:"rgb" },
   { name:"RK61 Creamy", type:"keyboard", price:45, tag:"creamy" },
   { name:"AJAZZ AK820", type:"keyboard", price:65, tag:"creamy" },
 
-  // MICE
   { name:"Logitech G305", type:"mouse", price:40, tag:"fps" },
   { name:"Razer Viper Mini", type:"mouse", price:45, tag:"fps" },
 
-  // HEADSETS
   { name:"HyperX Cloud II", type:"headset", price:70, tag:"fps" },
   { name:"HyperX Cloud Core", type:"headset", price:50, tag:"fps" },
 
-  // SPEAKERS
   { name:"Creative Pebble", type:"speaker", price:35, tag:"clean" },
 
-  // CPUs
-  { name:"Ryzen 5 5600", type:"cpu", price:120, tag:"gaming" },
-
-  // GPUs
-  { name:"RTX 3060", type:"gpu", price:250, tag:"gaming" }
-
+  { name:"AOC 24G2", type:"monitor", price:130, tag:"fps" },
+  { name:"RTX 3060", type:"gpu", price:250, tag:"gaming" },
+  { name:"Ryzen 5 5600", type:"cpu", price:120, tag:"gaming" }
 ];
+
+function search() {
+
+  const category = document.getElementById("category").value;
+  const budget = parseInt(document.getElementById("budget").value) || 9999;
+
+  let results = products.filter(p =>
+    (category === "all" || p.type === category) &&
+    p.price <= budget
+  );
+
+  render(results, budget, budget);
+}
 
 function buildSetup() {
 
   const text = document.getElementById("input").value.toLowerCase();
-  const budget = parseInt(document.getElementById("budget").value) || 200;
+  const budget = 300;
 
   const types = ["keyboard","mouse","headset"];
 
@@ -42,52 +47,34 @@ function buildSetup() {
 
         let score = 0;
 
-        if (text.includes("rgb") && p.tag === "rgb") score += 50;
-        if (text.includes("creamy") && p.tag === "creamy") score += 50;
-        if (text.includes("fps") && p.tag === "fps") score += 50;
-
-        // budget awareness
-        if (p.price <= budget / 3) score += 30;
-        if (p.price > budget / 3) score -= 20;
+        if (text.includes("rgb") && p.tag === "rgb") score += 40;
+        if (text.includes("creamy") && p.tag === "creamy") score += 40;
+        if (text.includes("fps") && p.tag === "fps") score += 40;
 
         return { ...p, score };
       })
       .sort((a,b) => b.score - a.score);
 
-    let chosen = null;
-
-    for (let item of options) {
-      if (total + item.price <= budget) {
-        chosen = item;
-        break;
-      }
-    }
-
-    if (!chosen) chosen = options[0];
+    let chosen = options[0];
 
     results.push(chosen);
     total += chosen.price;
   }
 
-  render(results, total, budget);
+  render(results, budget, total);
 }
 
-function render(items, total, budget) {
+function render(items, budget, total) {
 
+  const results = document.getElementById("results");
   const summary = document.getElementById("summary");
   const bar = document.getElementById("bar");
-  const results = document.getElementById("results");
 
   results.innerHTML = "";
 
-  let name =
-    total < 120 ? "Budget Setup" :
-    total < 200 ? "Balanced Setup" :
-    "High-End Setup";
-
   summary.innerHTML = `
-    <h2>🔥 ${name}</h2>
-    <p>💰 Total Cost: $${total}</p>
+    <h2>🔥 Setup</h2>
+    <p>💰 Total: $${total}</p>
   `;
 
   let percent = Math.min(100, (total / budget) * 100);
@@ -96,14 +83,12 @@ function render(items, total, budget) {
     <div class="bar">
       <div class="fill" style="width:${percent}%"></div>
     </div>
-    <p>${total} / ${budget} used</p>
+    <p>${total} / ${budget}</p>
   `;
 
-  items.forEach((item,i) => {
-
+  items.forEach(item => {
     results.innerHTML += `
       <div class="card">
-        ${i === 0 ? "<span class='badge'>🔥 BEST</span>" : ""}
         <h3>${item.name}</h3>
         <p>$${item.price}</p>
       </div>
