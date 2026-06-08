@@ -11,17 +11,15 @@ h1 {
 }
 
 .box {
-  background: #151a2b;
-  width: 90%;
-  max-width: 700px;
   margin: 20px auto;
   padding: 20px;
+  max-width: 600px;
+  background: #151a2b;
   border-radius: 12px;
 }
 
-input, select {
+input {
   width: 80%;
-  max-width: 500px;
   padding: 12px;
   margin: 8px;
   border-radius: 10px;
@@ -38,7 +36,7 @@ button {
 }
 
 .card {
-  background: #151a2b;
+  background: #1a2135;
   margin: 15px auto;
   padding: 15px;
   width: 80%;
@@ -48,24 +46,9 @@ button {
 }
 
 .badge {
+  float: right;
   background: gold;
   color: black;
   padding: 4px 8px;
   border-radius: 8px;
-  float: right;
-}
-
-.bar {
-  width: 80%;
-  max-width: 500px;
-  height: 18px;
-  background: #1f2937;
-  margin: 10px auto;
-  border-radius: 10px;
-  overflow: hidden;
-}
-
-.fill {
-  height: 100%;
-  background: #22c55e;
 }

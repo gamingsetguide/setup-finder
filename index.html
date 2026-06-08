@@ -1,41 +1,22 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Setup Finder Pro</title>
+  <title>Setup Builder Pro+</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-<h1>🎮 Setup Finder Pro</h1>
-<p>Build gaming setups instantly</p>
+<h1>🎮 Setup Builder Pro+</h1>
+<p>Build optimized gaming setups instantly</p>
 
 <div class="box">
 
-  <h2>🔍 Quick Search</h2>
-
-  <select id="category">
-    <option value="all">All Categories</option>
-    <option value="keyboard">Keyboard</option>
-    <option value="mouse">Mouse</option>
-    <option value="headset">Headset</option>
-    <option value="speaker">Speaker</option>
-    <option value="cpu">CPU</option>
-    <option value="gpu">GPU</option>
-    <option value="monitor">Monitor</option>
-  </select>
+  <input id="input" placeholder="e.g. RGB, creamy, FPS setup" />
 
   <input id="budget" type="number" placeholder="Budget ($)" />
 
-  <button onclick="quickSearch()">Search</button>
-</div>
+  <button onclick="buildSetup()">Generate Setup</button>
 
-<div class="box">
-
-  <h2>🖥️ Full Setup Builder</h2>
-
-  <input id="input" placeholder="e.g. rgb setup, creamy white setup, fps setup" />
-
-  <button onclick="buildSetup()">Build Setup</button>
 </div>
 
 <div id="summary"></div>
