@@ -11,10 +11,15 @@ h1 {
 }
 
 .box {
-  margin: 20px;
+  background: #151a2b;
+  width: 90%;
+  max-width: 700px;
+  margin: 20px auto;
+  padding: 20px;
+  border-radius: 12px;
 }
 
-input {
+input, select {
   width: 80%;
   max-width: 500px;
   padding: 12px;
@@ -53,7 +58,7 @@ button {
 .bar {
   width: 80%;
   max-width: 500px;
-  height: 20px;
+  height: 18px;
   background: #1f2937;
   margin: 10px auto;
   border-radius: 10px;
