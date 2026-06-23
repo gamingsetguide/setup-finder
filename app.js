@@ -1,96 +1,105 @@
+```javascript
+// Better product database
 const products = [
-  { name:"AULA F75 RGB", type:"keyboard", price:70, tag:"rgb" },
-  { name:"RK61 Creamy", type:"keyboard", price:45, tag:"creamy" },
-  { name:"AJAZZ AK820", type:"keyboard", price:65, tag:"creamy" },
-
-  { name:"Logitech G305", type:"mouse", price:40, tag:"fps" },
-  { name:"Razer Viper Mini", type:"mouse", price:45, tag:"fps" },
-
-  { name:"HyperX Cloud II", type:"headset", price:70, tag:"fps" },
-  { name:"HyperX Cloud Core", type:"headset", price:50, tag:"fps" }
+  {
+    name: "AULA F75 RGB",
+    type: "keyboard",
+    price: 70,
+    tags: ["black", "white", "rgb", "mechanical", "creamy"]
+  },
+  {
+    name: "RK61",
+    type: "keyboard",
+    price: 45,
+    tags: ["black", "white", "clicky", "mechanical"]
+  },
+  {
+    name: "AJAZZ AK820",
+    type: "keyboard",
+    price: 65,
+    tags: ["white", "creamy", "rgb"]
+  },
+  {
+    name: "Logitech G305",
+    type: "mouse",
+    price: 40,
+    tags: ["black", "wireless", "fps"]
+  },
+  {
+    name: "Razer Viper Mini",
+    type: "mouse",
+    price: 45,
+    tags: ["black", "fps", "lightweight"]
+  },
+  {
+    name: "HyperX Cloud II",
+    type: "headset",
+    price: 70,
+    tags: ["black", "gaming", "fps"]
+  },
+  {
+    name: "HyperX Cloud Core",
+    type: "headset",
+    price: 50,
+    tags: ["black", "gaming"]
+  }
 ];
 
-let mode = "single";
+// ---------- QUICK SEARCH ----------
+function quickSearch() {
+  const type = document.getElementById("qType").value;
+  const desc = document.getElementById("qDesc").value.toLowerCase();
+  const budget = parseInt(document.getElementById("qBudget").value) || 999;
 
-function setMode(m) {
-  mode = m;
-
-  document.getElementById("singleMode").style.display =
-    m === "single" ? "block" : "none";
-
-  document.getElementById("setupMode").style.display =
-    m === "setup" ? "block" : "none";
-}
-
-/* ---------------- SINGLE MODE ---------------- */
-
-function singleSearch() {
-
-  const type = document.getElementById("singleType").value;
-  const desc = document.getElementById("singleDesc").value.toLowerCase();
-  const budget = parseInt(document.getElementById("singleBudget").value) || 999;
-
-  let best = products
-    .filter(p => p.type === type)
-    .map(p => {
-
-      let score = 0;
-
-      if (desc.includes("rgb") && p.tag === "rgb") score += 50;
-      if (desc.includes("creamy") && p.tag === "creamy") score += 50;
-      if (desc.includes("fps") && p.tag === "fps") score += 50;
-
-      if (p.price <= budget) score += 30;
-
-      return { ...p, score };
-    })
-    .sort((a,b)=>b.score-a.score)[0];
-
+  const best = pick(type, desc, budget);
   render([best], budget, best.price);
 }
 
-/* ---------------- SETUP MODE ---------------- */
-
+// ---------- FULL SETUP ----------
 function buildSetup() {
+  const kb = document.getElementById("kbDesc").value.toLowerCase();
+  const ms = document.getElementById("msDesc").value.toLowerCase();
+  const hs = document.getElementById("hsDesc").value.toLowerCase();
+  const budget = parseInt(document.getElementById("fullBudget").value) || 300;
 
-  const kb = document.getElementById("setupKeyboard").value.toLowerCase();
-  const ms = document.getElementById("setupMouse").value.toLowerCase();
-  const hs = document.getElementById("setupHeadset").value.toLowerCase();
-  const budget = parseInt(document.getElementById("setupBudget").value) || 300;
-
-  let items = [
-    pick("keyboard", kb),
-    pick("mouse", ms),
-    pick("headset", hs)
+  const items = [
+    pick("keyboard", kb, budget),
+    pick("mouse", ms, budget),
+    pick("headset", hs, budget)
   ];
 
-  let total = items.reduce((a,b)=>a + b.price, 0);
+  const total = items.reduce((sum, item) => sum + item.price, 0);
 
   render(items, budget, total);
 }
 
-/* smart picker */
-function pick(type, desc) {
+// ---------- SMART PICK ----------
+function pick(type, desc, budget) {
 
-  let best = products
+  const words = desc.split(/\s+/);
+
+  return products
     .filter(p => p.type === type)
     .map(p => {
 
       let score = 0;
 
-      if (desc.includes("rgb") && p.tag === "rgb") score += 50;
-      if (desc.includes("creamy") && p.tag === "creamy") score += 50;
-      if (desc.includes("fps") && p.tag === "fps") score += 50;
+      words.forEach(word => {
+        if (p.tags.includes(word)) score += 25;
+      });
+
+      if (p.price <= budget) {
+        score += 15;
+      } else {
+        score -= (p.price - budget);
+      }
 
       return { ...p, score };
     })
-    .sort((a,b)=>b.score-a.score)[0];
-
-  return best;
+    .sort((a, b) => b.score - a.score)[0];
 }
 
-/* ---------------- RENDER ---------------- */
-
+// ---------- RENDER ----------
 function render(items, budget, total) {
 
   const results = document.getElementById("results");
@@ -104,7 +113,7 @@ function render(items, budget, total) {
     <p>💰 Total: $${total}</p>
   `;
 
-  let percent = Math.min(100, (total / budget) * 100);
+  const percent = Math.min(100, (total / budget) * 100);
 
   bar.innerHTML = `
     <div class="bar">
@@ -114,12 +123,16 @@ function render(items, budget, total) {
   `;
 
   items.forEach(item => {
-
     results.innerHTML += `
       <div class="card">
         <h3>${item.name}</h3>
         <p>$${item.price}</p>
+        <a target="_blank"
+           href="https://www.amazon.com/s?k=${encodeURIComponent(item.name)}">
+           Buy on Amazon
+        </a>
       </div>
     `;
   });
 }
+```
